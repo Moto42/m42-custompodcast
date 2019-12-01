@@ -9,11 +9,30 @@
 
 
 const FeedData = require('../objects/FeedData');
+const fetch = require('node-fetch');
 
 const rssData = {};
 
 rssData.get = function(req, res, next){
   res.status(501).send('That ain\'t done yet y\'all.\ncome back later.')
+rssData.get = async function(req, res, next){
+  res.set('Access-Control-Allow-Origin', '*');
+  const {rssurl, raw} = req.query;
+  if(! rssurl) {
+    res.status(400).send("No RSS feed url specified");
+  }
+  //fetch the RSS XML
+  const rssRequest = await fetch(rssurl);
+  const contentType = rssRequest.headers.get('content-type')
+  const status = rssRequest.status;
+  if(status !== 200) {
+    res.status(400).send(`Failed to GET RSS feed ${rssurl}. Request failed with status code ${status}`)
+    return;
+  }
+  if(! /application\/rss\+xml/.test(contentType) ){
+    rest.status(400).send(`Error: Conent type of requested url is not 'application/rss+xml,\nContent Type returned ${contentType}'`);
+    return;
+  }
 }
 
 module.exports = rssData;

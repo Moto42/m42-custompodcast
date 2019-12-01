@@ -24,7 +24,7 @@ entryPoint.route('/data/:feedID')
  * Frontends may need to pull RSS data from podcasts that have not set their CORS headers correctly.
  * The whole point of a podcast RSS is for other APPs to use the data, why do so many no set their headers?
  */
-entryPoint.rout('rssdata')
+entryPoint.route('/rssdata')
   .get(rssData.get);
 
 module.exports = entryPoint;

@@ -7,14 +7,11 @@
  * - raw : if true, the RSS XML will not be parsed, but passed directly to the client with proper CORS headers.
  */
 
-
 const FeedData = require('../objects/FeedData');
 const fetch = require('node-fetch');
 
 const rssData = {};
 
-rssData.get = function(req, res, next){
-  res.status(501).send('That ain\'t done yet y\'all.\ncome back later.')
 rssData.get = async function(req, res, next){
   res.set('Access-Control-Allow-Origin', '*');
   const {rssurl, raw} = req.query;
@@ -33,6 +30,21 @@ rssData.get = async function(req, res, next){
     rest.status(400).send(`Error: Conent type of requested url is not 'application/rss+xml,\nContent Type returned ${contentType}'`);
     return;
   }
+
+  //Passing the raw RSS XML if requested
+  if(raw === "true"){
+    res.set('content-type', contentType);
+    res.send(await rssRequest.text());
+    return
+  }
+
+  // At this point we know:
+  //  - Client requested a parsed  FeedData object
+  //  - rssurl was most likely valid.
+
+
+
+  res.send('yup');
 }
 
 module.exports = rssData;

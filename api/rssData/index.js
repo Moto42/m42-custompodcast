@@ -37,14 +37,18 @@ rssData.get = async function(req, res, next){
     res.send(await rssRequest.text());
     return
   }
-
   // At this point we know:
   //  - Client requested a parsed  FeedData object
   //  - rssurl was most likely valid.
-
-
-
-  res.send('yup');
+  try {
+    const rssData = FeedData.fromXML( await rssRequest.text());
+    res.set('content-type', 'application/json');
+    res.status(200).json(rssData);
+  } catch (error) {
+    res.status(400).send(`Error doing the thing \n ${error}`)
+  } finally {
+    res.status(400).send('Catastrophic failure. rssData.get finally')
+  }
 }
 
 module.exports = rssData;

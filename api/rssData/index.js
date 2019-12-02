@@ -47,7 +47,6 @@ rssData.get = async function(req, res, next){
   } catch (error) {
     res.status(400).send(`Error doing the thing \n ${error}`)
   } finally {
-    res.status(400).send('Catastrophic failure. rssData.get finally')
   }
 }
 

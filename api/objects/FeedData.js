@@ -13,8 +13,7 @@ function FeedData(data={}) {
   this.owner_name  = data.owner_name || 'No One',
   this.owner_email = data.owner_email || 'Private@email.com',
   this.owner_email = data.owner_email || 'Private@email.com',
-
-  this.items = [];
+  this.items = data.items || [];
 
   if(data.items && data.items.length > 0){
 
@@ -52,13 +51,18 @@ FeedData.fromXML = function(xmlString) {
   data.imgUrl      = channel.getElementsByTagName('image')[0].getElementsByTagName('url')[0].textContent;
   data.explicit    = channel.getElementsByTagName('itunes:explicit')[0].textContent;
   data.category    = channel.getElementsByTagName('itunes:category')[0].textContent;
+  //iterate over the <item> tags nodes to get each episode
   data.items = [];
   const itemList = channel.getElementsByTagName('item');
-  data.items = itemList.length;
-  // title       : itemList[index].getElementsByTagName('title')[0].textContent,
-  // description : itemList[index].getElementsByTagName('description')[0].textContent,
-  // url         : itemList[index].getElementsByTagName('enclosure')[0].textContent,
-  // pubDate     : itemList[index].getElementsByTagName('pubDate')[0].textContent,
+  for(let index = 0; itemList.length; index += 1){
+    const newItem = {
+      title       : itemList.item(index).getElementsByTagName('title')[0].textContent,
+      description : itemList.item(index).getElementsByTagName('description')[0].textContent,
+      url         : itemList.item(index).getElementsByTagName('enclosure')[0].textContent,
+      pubDate     : itemList.item(index).getElementsByTagName('pubDate')[0].textContent,
+    };
+    data.items.push(newItem);
+  }
 
   return new FeedData(data);
 }

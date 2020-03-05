@@ -7,7 +7,7 @@
   "description": "A Frontend and API to build and serve personalized podcast feeds.",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
+    "start": "nodemon server.js",
     "test": "jest"
   },
   "dependencies": {
@@ -15,6 +15,7 @@
     "dotenv": "^8.1.0",
     "express": "^4.16.4",
     "mongodb": "^3.3.2",
+    "node-fetch": "^2.6.0",
     "xmldom": "^0.1.27"
   },
   "engines": {

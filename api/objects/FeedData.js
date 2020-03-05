@@ -13,8 +13,7 @@ function FeedData(data={}) {
   this.owner_name  = data.owner_name || 'No One',
   this.owner_email = data.owner_email || 'Private@email.com',
   this.owner_email = data.owner_email || 'Private@email.com',
-
-  this.items = [];
+  this.items = data.items || [];
 
   if(data.items && data.items.length > 0){
 
@@ -41,6 +40,32 @@ function FeedData(data={}) {
 
 }
 
+FeedData.fromXML = function(xmlString) {
+  const xml = (new DOMParser()).parseFromString(xmlString,'text.xml');
+  const channel = xml.getElementsByTagName('channel')[0];
+  const data = {};
+
+  data.title       = channel.getElementsByTagName('title')[0].textContent;
+  data.link        = channel.getElementsByTagName('link')[0].textContent;
+  data.description = channel.getElementsByTagName('description')[0].textContent;
+  data.imgUrl      = channel.getElementsByTagName('image')[0].getElementsByTagName('url')[0].textContent;
+  data.explicit    = channel.getElementsByTagName('itunes:explicit')[0].textContent;
+  data.category    = channel.getElementsByTagName('itunes:category')[0].textContent;
+  //iterate over the <item> tags nodes to get each episode
+  data.items = [];
+  const itemList = channel.getElementsByTagName('item');
+  for(let index = 0; index < itemList.length; index += 1){
+    const newItem = {
+      title       : itemList.item(index).getElementsByTagName('title')[0].textContent,
+      description : itemList.item(index).getElementsByTagName('description')[0].textContent,
+      url         : itemList.item(index).getElementsByTagName('enclosure')[0].textContent,
+      pubDate     : itemList.item(index).getElementsByTagName('pubDate')[0].textContent,
+    };
+    data.items.push(newItem);
+  }
+
+  return new FeedData(data);
+}
 
 function toXML(data){
   const xmltemplate = `<?xml version='1.0' encoding='utf-8'?>
@@ -68,7 +93,7 @@ function toXML(data){
   </rss>
   `;
 
-  const xml = (new DOMParser()).parseFromString(xmltemplate,'text.xml')
+  const xml = (new DOMParser()).parseFromString(xmltemplate,'text.xml');
   const channel = xml.getElementsByTagName('channel')[0];
 
   if(data.items) {

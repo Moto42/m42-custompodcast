@@ -54,7 +54,7 @@ FeedData.fromXML = function(xmlString) {
   //iterate over the <item> tags nodes to get each episode
   data.items = [];
   const itemList = channel.getElementsByTagName('item');
-  for(let index = 0; itemList.length; index += 1){
+  for(let index = 0; index < itemList.length; index += 1){
     const newItem = {
       title       : itemList.item(index).getElementsByTagName('title')[0].textContent,
       description : itemList.item(index).getElementsByTagName('description')[0].textContent,

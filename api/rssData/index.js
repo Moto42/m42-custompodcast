@@ -26,8 +26,8 @@ rssData.get = async function(req, res, next){
     res.status(400).send(`Failed to GET RSS feed ${rssurl}. Request failed with status code ${status}`)
     return;
   }
-  if(! /application\/rss\+xml/.test(contentType) ){
-    rest.status(400).send(`Error: Conent type of requested url is not 'application/rss+xml,\nContent Type returned ${contentType}'`);
+  if(! ( /application\/rss\+xml/.test(contentType) || /application\/xml/.test(contentType) ) ){
+    res.status(400).send(`Error: Conent type of requested url is not 'application/rss+xml,\nContent Type returned ${contentType}'`);
     return;
   }
 
